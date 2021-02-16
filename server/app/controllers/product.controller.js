@@ -4,13 +4,13 @@ const Product = db.products;
 // Create and Save a new User
 exports.create = (req, res) => {
     // Validate request
-    if (!req.body.firstname) {
+    if (!req.body.title) {
       res.status(400).send({ message: "Content can not be empty!" });
       return;
     }
   
     // Create a User
-    const products = new User({
+    const products = new Product({
       title: req.body.title,
       description: req.body.description,
       img: req.body.img,
