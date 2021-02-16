@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
 
+
+
 var corsOptions = {
   origin: "http://localhost:8080"
 };
@@ -19,6 +21,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to my shop kakashi." });
 });
+
+require("./app/routes/user.routes")(app);
+require("./app/routes/product.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
@@ -39,3 +44,4 @@ db.mongoose
     console.log("Cannot connect to the database!", err);
     process.exit();
   });
+

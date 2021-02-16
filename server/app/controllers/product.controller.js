@@ -1,5 +1,5 @@
 const db = require("../models");
-const User = db.users;
+const Product = db.products;
 
 // Create and Save a new User
 exports.create = (req, res) => {
@@ -10,16 +10,16 @@ exports.create = (req, res) => {
     }
   
     // Create a User
-    const users = new User({
-      firstname: req.body.firstname,
-      lastname: req.body.lastname,
-      email: req.body.email,
-      password: req.body.password,
+    const products = new User({
+      title: req.body.title,
+      description: req.body.description,
+      img: req.body.img,
+      price: req.body.price,
     });
   
     // Save User in the database
-    users
-      .save(users)
+    products
+      .save(products)
       .then(data => {
         res.send(data);
       })
@@ -33,10 +33,10 @@ exports.create = (req, res) => {
 
 // Retrieve all User from the database.
 exports.findAll = (req, res) => {
-  const lastname = req.query.lastname;
-  var condition = lastname ? { lastname: { $regex: new RegExp(lastname), $options: "i" } } : {};
+  const title = req.query.title;
+  var condition = title ? { title: { $regex: new RegExp(title), $options: "i" } } : {};
 
-  User.find(condition)
+  Product.find(condition)
     .then(data => {
       res.send(data);
     })
@@ -52,7 +52,7 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  User.findById(id)
+  Product.findById(id)
     .then(data => {
       if (!data)
         res.status(404).send({ message: "Not found Tutorial with id " + id });
@@ -72,10 +72,8 @@ exports.update = (req, res) => {
       message: "Data to update can not be empty!"
     });
   }
-
   const id = req.params.id;
-
-  User.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
+  Product.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     .then(data => {
       if (!data) {
         res.status(404).send({
@@ -94,7 +92,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  User.findByIdAndRemove(id)
+  Product.findByIdAndRemove(id)
     .then(data => {
       if (!data) {
         res.status(404).send({
@@ -114,7 +112,7 @@ exports.delete = (req, res) => {
 };
 // Delete all User from the database.
 exports.deleteAll = (req, res) => {
-  User.deleteMany({})
+  Product.deleteMany({})
     .then(data => {
       res.send({
         message: `${data.deletedCount} Tutorials were deleted successfully!`
@@ -130,7 +128,7 @@ exports.deleteAll = (req, res) => {
 
 // Find all published Tutorials
 exports.findAllPublished = (req, res) => {
-  User.find({ published: true })
+  Product.find({ published: true })
     .then(data => {
       res.send(data);
     })
