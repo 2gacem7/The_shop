@@ -1,5 +1,5 @@
 const db = require("../models");
-const Product = db.products;
+const Product = db.product;
 
 // Create and Save a new User
 exports.create = (req, res) => {
@@ -8,18 +8,17 @@ exports.create = (req, res) => {
       res.status(400).send({ message: "Content can not be empty!" });
       return;
     }
-  
     // Create a User
-    const products = new Product({
+    const product = new Product({
       title: req.body.title,
       description: req.body.description,
       img: req.body.img,
       price: req.body.price,
     });
   
-    // Save User in the database
-    products
-      .save(products)
+    // Save Product in the database
+    product
+      .save(product)
       .then(data => {
         res.send(data);
       })
