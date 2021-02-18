@@ -11,7 +11,21 @@
               class="form-control"
             />
             <div
-            v-if="!user.username"
+            v-if="!user.username && submitted"
+            class="alert alert-danger"
+            role="alert"
+              >Username is required!</div>   
+          </q-card-section>
+          <q-card-section>
+            <h4 class="text-h6 text-center">Email</h4>
+            <q-input 
+              v-model="user.email"
+              type="text"
+              name="email"
+              class="form-control"
+            />
+            <div
+            v-if="!user.email && submitted"
             class="alert alert-danger"
             role="alert"
               >Username is required!</div>   
@@ -25,14 +39,14 @@
               class="form-control"
             />
             <div
-            v-if="!user.password"
+            v-if="!user.password && submitted"
             class="alert alert-danger"
             role="alert"
               >Password is required!</div>
           </q-card-section>
           <q-card-actions class="justify-center">
-            <q-btn :disabled="loading" @click="handleLogin">
-              <span v-show="loading" class="spinner-border spinner-border-sm"></span>
+            <q-btn  @click="handleRegister">
+              <span class="spinner-border spinner-border-sm"></span>
               <span>Login</span>
             </q-btn>
           </q-card-actions>
@@ -41,15 +55,17 @@
   </div>
 </template>
 
+
 <script>
 import User from '../models/user';
 
 export default {
-  name: 'Login',
+  name: 'Register',
   data() {
     return {
-      user: new User('', ''),
-      loading: false,
+      user: new User('', '', ''),
+      submitted: false,
+      successful: false,
       message: ''
     };
   },
@@ -58,33 +74,35 @@ export default {
       return this.$store.state.auth.status.loggedIn;
     }
   },
-  created() {
+  mounted() {
     if (this.loggedIn) {
-      this.$router.push('/');
+      this.$router.push('/login');
     }
   },
   methods: {
-    handleLogin() {
-      console.log("connexion")
-      this.loading = true;
-
-        if (this.user.username && this.user.password) {
-          this.$store.dispatch('auth/login', this.user).then(
-            () => {
-              this.$router.push('/');
+    handleRegister() {
+        console.log("enregistrement")
+      this.message = '';
+      this.submitted = true;
+        if (this.user.username && this.user.email && this.user.password) {
+          this.$store.dispatch('auth/register', this.user).then(
+            this.$router.push('/login'),
+            data => {
+              this.message = data.message;
+              this.successful = true;
             },
             error => {
-              this.loading = false;
               this.message =
                 (error.response && error.response.data) ||
                 error.message ||
                 error.toString();
+              this.successful = false;
             }
-        );
-      }
+          );
+        }
     }
-    }
-  };
+  }
+};
 </script>
 
 <style scoped>
