@@ -6,7 +6,7 @@ class ProductService {
     get() {
         return axios.get(API_URL + '');
     }
-  
 }
+
 
 export default new ProductService();

@@ -25,7 +25,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="product in products" :key="product">
+                  <tr v-for="(product, i) in products" :key="product.id">
                     <td class="text-center">{{product.title}}</td>
                     <td class="text-center">{{product.description}}</td>
                     <td class="text-center">{{product.price}}</td>
@@ -34,9 +34,11 @@
                       contain
                     >
                     </td>
-                    <td class="text-center">Bouton</td>
-
-                
+                    <td class="text-center">
+                      <q-btn class="bg-red" @click="removeProduct(product, i) ? isSelected(product) : select(product)">
+              <em class="material-icons">delete</em>
+                      </q-btn>
+                    </td>
                   </tr>
                 </tbody>
               </q-markup-table>
@@ -97,6 +99,11 @@ export default {
             this.img="";
             location.reload();
     },
+    async removeProduct(product, i){
+      await axios.delete('http://localhost:8080/api/product/'+ product.id)
+      this.products.splice(i, 1)
+      this.allProduct();
+    },
     allProduct() {
       ProductService.get()
         .then(response => {
@@ -106,6 +113,14 @@ export default {
         .catch(e => {
           console.log(e);
         });
+    },
+    select(product){
+      this.selected = product;
+      //this.editedTitle = todo.title;
+      //this.completed = todo.completed;
+    },
+    isSelected(product){
+      return product=== this.selected;
     },
 
     refreshList() {
